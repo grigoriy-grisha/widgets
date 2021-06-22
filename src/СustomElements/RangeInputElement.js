@@ -1,14 +1,9 @@
-export class RangeElement extends HTMLElement {
+export class RangeInputElement extends HTMLElement {
   constructor() {
     super();
     this.value = { minValue: "", maxValue: "" };
     this.minHandler = this.minHandler.bind(this);
     this.maxHandler = this.maxHandler.bind(this);
-    this.template = (minValue, maxValue) => `
-          <input id="min" max="${maxValue}" value="${minValue}" type="date"/>
-          <input id="max" min="${minValue}"  value="${maxValue}" type="date"/>
-          `;
-
     this.shadowRootElement = this.attachShadow({ mode: "open" });
   }
 
@@ -31,5 +26,17 @@ export class RangeElement extends HTMLElement {
       this.value.maxValue
     );
     this.setListeners();
+  }
+
+  minHandler({ target }) {
+    this.value.minValue = target.value;
+    this.findMax().setAttribute("min", this.value.minValue);
+    this.findMin().setAttribute("value", this.value.minValue);
+  }
+
+  maxHandler({ target }) {
+    this.value.maxValue = target.value;
+    this.findMin().setAttribute("max", this.value.maxValue);
+    this.findMax().setAttribute("value", this.value.maxValue);
   }
 }
